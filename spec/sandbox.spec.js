@@ -63,6 +63,30 @@ exports['it should maintain the order of sync. console output'] = function( test
   })
 }
 
+exports['it should allow for a user-defined global context to be specified at runtime'] = function( test ) {
+    var fs = require('fs'),
+	path = require('path');
+    var sb = new Sandbox({
+	context: fs.readFileSync(path.join(__dirname, "resources", "test-context.js"), "utf-8")
+    });
+    sb.run('console.log(test_method());', function( output ){
+	test.equal(output.console[0], "'Foo Bar'");
+	test.finish();
+    });
+};
+
+exports['it should allow for a user-defined results applier to be specified at runtime'] = function( test ) {
+    var fs = require('fs'),
+	path = require('path');
+    var sb = new Sandbox({
+	applier: fs.readFileSync(path.join(__dirname, "resources", "test-applier.js"), "utf-8")
+    });
+    sb.run('foo = "bar";', function( output ){
+	test.equal(output.foo, "'bar'");
+	test.finish();
+    });
+};
+
 /* ------------------------------ GO GO GO ------------------------------ */
 if ( module == require.main )
   require( 'async_testing' ).run( __filename, process.ARGV )
