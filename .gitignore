@@ -1,1 +1,10 @@
 *.swp
+
+# ctags files
+TAGS
+
+# Emacs backup files
+*~
+# Emacs file locks
+.#*
+\#*#
