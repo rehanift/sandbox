@@ -87,6 +87,21 @@ exports['it should allow for a user-defined results applier to be specified at r
     });
 };
 
+exports['it should allow for runtime data to be injected into the user-defined global context'] = function( test ) {
+    var fs = require('fs'),
+	path = require('path');
+    var sb = new Sandbox({
+	context: fs.readFileSync(path.join(__dirname, "resources", "test-context.js"), "utf-8"),
+	runtime_data: {
+	    hello: "world"
+	}
+    });
+    sb.run('console.log(get_runtime_data());', function( output ){
+	test.equal(output.console[0], "{ hello: 'world' }");
+	test.finish();
+    });
+};
+
 /* ------------------------------ GO GO GO ------------------------------ */
 if ( module == require.main )
   require( 'async_testing' ).run( __filename, process.ARGV )
